@@ -41,13 +41,13 @@ jobs:
       - name: Apply database migrations
         run: |
           python manage.py migrate
-        working-directory: ./your_project_directory # Cambia esto a la carpeta donde está tu proyecto Django
+        working-directory: ./directorydata_service # Cambia esto a la carpeta donde está tu proyecto Django
 
       - name: Start Django server
         run: |
           nohup python manage.py runserver 127.0.0.1:8000 & 
           sleep 10  # Esperar a que el servidor se inicie correctamente
-        working-directory: ./your_project_directory # Cambia esto a la carpeta donde está tu proyecto Django
+        working-directory: ./directorydata_service # Cambia esto a la carpeta donde está tu proyecto Django
 
       - name: Run tests
         run: |
