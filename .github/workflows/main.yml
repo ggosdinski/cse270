@@ -53,7 +53,9 @@ jobs:
         run: |
           pytest
         env:
-          BASE_URL: "http://127.0.0.1:5500"
+          BASE_URL:
+            "http://127.0.0.1:5500/teton/1.6/index.html"
+            #"http://127.0.0.1:5500"
 
   analyze:
     needs: build
