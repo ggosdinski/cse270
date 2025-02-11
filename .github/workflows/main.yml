@@ -43,6 +43,11 @@ jobs:
           python manage.py migrate
         working-directory: ./directorydata_service # Cambia esto a la carpeta donde está tu proyecto Django
 
+      - name: Set Chrome Binary Path
+        run: |
+          echo "CHROME_BIN=$(which google-chrome-stable)" >> $GITHUB_ENV
+          echo "CHROMEDRIVER_BIN=$(which chromedriver)" >> $GITHUB_ENV
+      
       - name: Install Chrome and Chromedriver
         run: |
           sudo apt-get update
