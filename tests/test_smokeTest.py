@@ -9,12 +9,17 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.options import Options
 
 class TestSmokeTest():
   def setup_method(self, method):
-    self.driver = webdriver.Chrome()
+    options = Options()
+    options.add_argument("--headless=new")  # Ejecutar en modo headless
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    self.driver = webdriver.Chrome(options=options)
     self.vars = {}
-  
+    
   def teardown_method(self, method):
     self.driver.quit()
   
