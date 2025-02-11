@@ -45,7 +45,7 @@ jobs:
 
       - name: Start Django server
         run: |
-          nohup python manage.py runserver 127.0.0.1:8000 & 
+          nohup python manage.py runserver 127.0.0.1:5500 & 
           sleep 10  # Esperar a que el servidor se inicie correctamente
         working-directory: ./directorydata_service # Cambia esto a la carpeta donde está tu proyecto Django
 
@@ -53,7 +53,7 @@ jobs:
         run: |
           pytest
         env:
-          BASE_URL: "http://127.0.0.1:8000"
+          BASE_URL: "http://127.0.0.1:5500"
 
   analyze:
     needs: build
