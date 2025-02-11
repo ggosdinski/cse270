@@ -14,12 +14,10 @@ from selenium.webdriver.chrome.options import Options
 class TestSmokeTest():
   def setup_method(self, method):
     options = Options()
-    options.add_argument("--headless=new")  # Ejecutar en modo headless
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--headless=new")
     self.driver = webdriver.Chrome(options=options)
     self.vars = {}
-    
+
   def teardown_method(self, method):
     self.driver.quit()
   
