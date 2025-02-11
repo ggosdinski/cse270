@@ -21,33 +21,39 @@ jobs:
     steps:
       - name: Checkout the latest code
         uses: actions/checkout@v4.1.2
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v5.0.0
         with:
           python-version: "3.12"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest requests pytest-mock selenium requests-mock coverage
+          pip install flake8 pytest requests pytest-mock selenium requests-mock coverage django
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      - name: Start application server
+
+      - name: Apply database migrations
         run: |
-          nohup python app.py &  # Asegúrate de que el archivo se llama 'app.py' o cambia el nombre aquí
-          sleep 5  # Espera 5 segundos para que el servidor inicie
-      - name: Startup HTTP Server for pipeline tests
-        uses: Eun/http-server-action@v1.0.11
-        with:
-          directory: .
-          port: 8000
-          index-files: |
-            ["index.html", "index.html"]
+          python manage.py migrate
+        working-directory: ./your_project_directory # Cambia esto a la carpeta donde está tu proyecto Django
+
+      - name: Start Django server
+        run: |
+          nohup python manage.py runserver 127.0.0.1:8000 & 
+          sleep 10  # Esperar a que el servidor se inicie correctamente
+        working-directory: ./your_project_directory # Cambia esto a la carpeta donde está tu proyecto Django
+
       - name: Run tests
         run: |
           pytest
+        env:
+          BASE_URL: "http://127.0.0.1:8000"
 
   analyze:
     needs: build
@@ -67,12 +73,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.2
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
+
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
@@ -87,12 +96,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.2
+
       - name: Setup Pages
         uses: actions/configure-pages@v4.0.0
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
         with:
           path: "teton/1.6"
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4.0.5

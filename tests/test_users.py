@@ -5,6 +5,8 @@ BASE_URL = "http://127.0.0.1:8000/users/"
 def test_valid_user():
     """Test 1: Verifies that a valid user receives a 200 status code"""
     response = requests.get(f"{BASE_URL}?username=admin&password=qwerty")
+    print("Response status:", response.status_code)
+    print("Response body:", response.text)  # Esto mostrará más detalles
     assert response.status_code == 200
 
 def test_invalid_user():
