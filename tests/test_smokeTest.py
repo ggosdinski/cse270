@@ -12,16 +12,15 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 
 class TestSmokeTest():
-   def setup_method(self, method):
-        options = Options()
-        options.binary_location = os.getenv("CHROME_BIN", "/usr/bin/google-chrome-stable")
-        options.add_argument("--headless=new")
-        self.driver = webdriver.Chrome(executable_path=os.getenv("CHROMEDRIVER_BIN", "/usr/bin/chromedriver"), options=options)
-        self.vars = {}
+  def setup_method(self, method):
+    options = Options()
+    options.add_argument("--headless=new")
+    self.driver = webdriver.Chrome(options=options)
+    self.vars = {}
 
   def teardown_method(self, method):
-        self.driver.quit()
-        
+    self.driver.quit()
+  
   def test_adminPage(self):
     self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
     self.driver.set_window_size(1296, 1400)
