@@ -43,6 +43,18 @@ jobs:
           python manage.py migrate
         working-directory: ./directorydata_service # Cambia esto a la carpeta donde está tu proyecto Django
 
+      - name: Install Chrome and Chromedriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get install -f -y
+          CHROME_VERSION=$(google-chrome --version | grep -oP '[0-9]+\.[0-9]+\.[0-9]+')
+          wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedriver_linux64.zip || true
+          unzip chromedriver_linux64.zip || true
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+
       - name: Start Django server
         run: |
           nohup python manage.py runserver 127.0.0.1:8000 & 
@@ -54,7 +66,7 @@ jobs:
           pytest
         env:
           BASE_URL:
-            "http://127.0.0.1:5500/teton/1.6/index.html"
+            "http://127.0.0.1:8000/teton/1.6/index.html"
             #"http://127.0.0.1:5500"
 
   analyze:
