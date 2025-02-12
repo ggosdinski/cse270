@@ -46,35 +46,13 @@ jobs:
       - name: Install Google Chrome and ChromeDriver
         run: |
           sudo apt update
-          sudo apt install -y wget curl unzip
+          sudo apt install -y wget curl unzip google-chrome-stable chromium-chromedriver
 
-          # Descargar e instalar Google Chrome
-          wget -q -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome.deb
-          rm google-chrome.deb
-
-          # Verificar instalación de Chrome
+      - name: Check Chrome and ChromeDriver versions
+        run: |
+          echo "Google Chrome version:"
           google-chrome --version
-
-          # Obtener la versión principal de Chrome
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f1)
-
-          # Buscar la versión compatible de ChromeDriver
-          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-
-          # Verificar si se obtuvo una versión válida
-          if [ -z "$DRIVER_VERSION" ]; then
-            echo "❌ Error: No se pudo obtener la versión correcta de ChromeDriver"
-            exit 1
-          fi
-
-          # Descargar e instalar ChromeDriver
-          wget -q -O chromedriver.zip "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
-          unzip chromedriver.zip
-          sudo mv chromedriver /usr/local/bin/
-          rm chromedriver.zip
-
-          # Verificar instalación de ChromeDriver
+          echo "ChromeDriver version:"
           chromedriver --version
 
       - name: Set Chrome Binary Path
