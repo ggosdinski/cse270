@@ -43,33 +43,35 @@ jobs:
           python manage.py migrate
         working-directory: ./directorydata_service # Cambia esto a la carpeta donde está tu proyecto Django
 
-      # Instalar Google Chrome y ChromeDriver
+      # Instalar Google Chrome y ChromeDriver correctamente
       - name: Install Google Chrome and ChromeDriver
         run: |
           sudo apt update
-          sudo apt install -y wget curl
+          sudo apt install -y wget curl unzip
 
-          # Agregar el repositorio oficial de Chrome
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-
-          sudo apt update
-          sudo apt install -y google-chrome-stable chromium-chromedriver
+          # Descargar e instalar Google Chrome
+          wget -q -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome.deb
+          rm google-chrome.deb
 
           # Verificar instalación
           google-chrome --version
+
+          # Descargar e instalar ChromeDriver (versión compatible con Chrome)
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f1)
+          DRIVER_URL=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          wget -q -O chromedriver.zip "https://chromedriver.storage.googleapis.com/$DRIVER_URL/chromedriver_linux64.zip"
+          unzip chromedriver.zip
+          sudo mv chromedriver /usr/local/bin/
+          rm chromedriver.zip
+
+          # Verificar instalación de ChromeDriver
           chromedriver --version
 
       - name: Set Chrome Binary Path
         run: |
           echo "CHROME_BIN=$(which google-chrome)" >> $GITHUB_ENV
           echo "CHROMEDRIVER_BIN=$(which chromedriver)" >> $GITHUB_ENV
-
-      - name: Install Chrome and Chromedriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          sudo apt-get install -y chromium-chromedriver
 
       - name: Start Django server
         run: |
