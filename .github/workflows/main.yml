@@ -43,7 +43,6 @@ jobs:
           python manage.py migrate
         working-directory: ./directorydata_service # Cambia esto a la carpeta donde está tu proyecto Django
 
-      # Instalar Google Chrome y ChromeDriver correctamente
       - name: Install Google Chrome and ChromeDriver
         run: |
           sudo apt update
@@ -54,13 +53,23 @@ jobs:
           sudo apt install -y ./google-chrome.deb
           rm google-chrome.deb
 
-          # Verificar instalación
+          # Verificar instalación de Chrome
           google-chrome --version
 
-          # Descargar e instalar ChromeDriver (versión compatible con Chrome)
+          # Obtener la versión principal de Chrome
           CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f1)
-          DRIVER_URL=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-          wget -q -O chromedriver.zip "https://chromedriver.storage.googleapis.com/$DRIVER_URL/chromedriver_linux64.zip"
+
+          # Buscar la versión compatible de ChromeDriver
+          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+
+          # Verificar si se obtuvo una versión válida
+          if [ -z "$DRIVER_VERSION" ]; then
+            echo "❌ Error: No se pudo obtener la versión correcta de ChromeDriver"
+            exit 1
+          fi
+
+          # Descargar e instalar ChromeDriver
+          wget -q -O chromedriver.zip "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
           unzip chromedriver.zip
           sudo mv chromedriver /usr/local/bin/
           rm chromedriver.zip
@@ -83,9 +92,7 @@ jobs:
         run: |
           pytest
         env:
-          BASE_URL:
-            "http://127.0.0.1:8000/teton/1.6/index.html"
-            #"http://127.0.0.1:5500"
+          BASE_URL: "http://127.0.0.1:8000/teton/1.6/index.html"
 
   analyze:
     needs: build
