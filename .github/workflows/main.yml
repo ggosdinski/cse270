@@ -43,27 +43,33 @@ jobs:
           python manage.py migrate
         working-directory: ./directorydata_service # Cambia esto a la carpeta donde está tu proyecto Django
 
-      # Instalar Google Chrome
-      - name: Install Google Chrome
+      # Instalar Google Chrome y ChromeDriver
+      - name: Install Google Chrome and ChromeDriver
         run: |
           sudo apt update
-          sudo apt install -y google-chrome-stable
+          sudo apt install -y wget curl
 
-      # Instalar ChromeDriver
-      - name: Install ChromeDriver
-        run: |
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f1)
-          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/bin/chromedriver
-          sudo chmod +x /usr/bin/chromedriver
+          # Agregar el repositorio oficial de Chrome
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
 
-      # Configurar variables de entorno para Chrome y ChromeDriver
+          sudo apt update
+          sudo apt install -y google-chrome-stable chromium-chromedriver
+
+          # Verificar instalación
+          google-chrome --version
+          chromedriver --version
+
       - name: Set Chrome Binary Path
         run: |
-          echo "CHROME_BIN=$(which google-chrome-stable)" >> $GITHUB_ENV
+          echo "CHROME_BIN=$(which google-chrome)" >> $GITHUB_ENV
           echo "CHROMEDRIVER_BIN=$(which chromedriver)" >> $GITHUB_ENV
+
+      - name: Install Chrome and Chromedriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          sudo apt-get install -y chromium-chromedriver
 
       - name: Start Django server
         run: |
@@ -75,7 +81,9 @@ jobs:
         run: |
           pytest
         env:
-          BASE_URL: "http://127.0.0.1:8000/teton/1.6/index.html"
+          BASE_URL:
+            "http://127.0.0.1:8000/teton/1.6/index.html"
+            #"http://127.0.0.1:5500"
 
   analyze:
     needs: build
