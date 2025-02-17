@@ -34,8 +34,14 @@ class TestSmokeTest():
     self.driver.find_element(By.ID, "password").send_keys("adin123213")
     self.driver.find_element(By.ID, "password").send_keys(Keys.ENTER)
     self.driver.find_element(By.CSS_SELECTOR, ".mysubmit:nth-child(4)").click()
-    assert self.driver.find_element(By.CSS_SELECTOR, ".errorMessage").text == "Invalid username and password."
- 
+    
+    # Esperar que el mensaje de error sea visible
+    WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".errorMessage")))
+    
+    # Verificar el texto del mensaje de error
+    error_message = self.driver.find_element(By.CSS_SELECTOR, ".errorMessage").text
+    assert error_message == "Invalid username and password."
+
 
   def test_directoryPage(self):
     self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
