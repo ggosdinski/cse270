@@ -25,7 +25,15 @@ class TestSmokeTest():
     def test_adminPage(self):
         self.driver.get("https://ggosdinski.github.io/cse270/")
         self.driver.set_window_size(1296, 1400)
-        self.driver.find_element(By.LINK_TEXT, "Admin").click()
+        
+        # Esperar a que el enlace "Admin" esté presente antes de hacer clic
+        wait = WebDriverWait(self.driver, 10)  # Espera hasta 10 segundos
+        admin_link = wait.until(EC.presence_of_element_located((By.LINK_TEXT, "Admin")))
+
+        # Ahora hacemos clic en el enlace "Admin"
+        admin_link.click()
+        
+        # Continuar con las acciones posteriores...
         element = self.driver.find_element(By.ID, "username")
         assert element.is_enabled() is True
         self.driver.find_element(By.ID, "username").send_keys("admin")
@@ -39,6 +47,7 @@ class TestSmokeTest():
         # Verificar el texto del mensaje de error
         error_message = self.driver.find_element(By.CSS_SELECTOR, ".errorMessage").text
         assert error_message == "Invalid username and password."
+
 
     def test_directoryPage(self):
         self.driver.get("https://ggosdinski.github.io/cse270/")
