@@ -45,7 +45,7 @@ class TestSmokeTest():
         self.driver.set_window_size(2560, 1400)
         # Agregar espera para asegurarse de que el enlace "Directory" esté presente
         wait = WebDriverWait(self.driver, 10)  # Espera hasta 10 segundos
-        directory_link = wait.until(EC.presence_of_element_located((By.LINK_TEXT, "Directory"))))
+        directory_link = wait.until(EC.presence_of_element_located((By.LINK_TEXT, "Directory")))
         directory_link.click()
 
         self.driver.find_element(By.LINK_TEXT, "Directory").click()
