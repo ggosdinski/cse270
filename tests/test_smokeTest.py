@@ -13,80 +13,76 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 
 class TestSmokeTest():
-  def setup_method(self, method):
-    options = Options()
-    options.add_argument("--headless=new")
-    self.driver = webdriver.Chrome(options=options)
-    self.vars = {}
-  
-  def teardown_method(self, method):
-    self.driver.quit()
+    def setup_method(self, method):
+        options = Options()
+        options.add_argument("--headless=new")
+        self.driver = webdriver.Chrome(options=options)
+        self.vars = {}
 
+    def teardown_method(self, method):
+        self.driver.quit()
 
-  
-  def test_adminPage(self):
-    self.driver.get("https://ggosdinski.github.io/cse270/")
-    self.driver.set_window_size(1296, 1400)
-    self.driver.find_element(By.LINK_TEXT, "Admin").click()
-    element = self.driver.find_element(By.ID, "username")
-    assert element.is_enabled() is True
-    self.driver.find_element(By.ID, "username").send_keys("admin")
-    self.driver.find_element(By.ID, "password").send_keys("adin123213")
-    self.driver.find_element(By.ID, "password").send_keys(Keys.ENTER)
-    self.driver.find_element(By.CSS_SELECTOR, ".mysubmit:nth-child(4)").click()
+    def test_adminPage(self):
+        self.driver.get("https://ggosdinski.github.io/cse270/")
+        self.driver.set_window_size(1296, 1400)
+        self.driver.find_element(By.LINK_TEXT, "Admin").click()
+        element = self.driver.find_element(By.ID, "username")
+        assert element.is_enabled() is True
+        self.driver.find_element(By.ID, "username").send_keys("admin")
+        self.driver.find_element(By.ID, "password").send_keys("adin123213")
+        self.driver.find_element(By.ID, "password").send_keys(Keys.ENTER)
+        self.driver.find_element(By.CSS_SELECTOR, ".mysubmit:nth-child(4)").click()
+        
+        # Esperar que el mensaje de error sea visible
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".errorMessage")))
+        
+        # Verificar el texto del mensaje de error
+        error_message = self.driver.find_element(By.CSS_SELECTOR, ".errorMessage").text
+        assert error_message == "Invalid username and password."
+
+    def test_directoryPage(self):
+        self.driver.get("https://ggosdinski.github.io/cse270/")
+        self.driver.set_window_size(2560, 1400)
+        # Agregar espera para asegurarse de que el enlace "Directory" esté presente
+        wait = WebDriverWait(self.driver, 10)  # Espera hasta 10 segundos
+        directory_link = wait.until(EC.presence_of_element_located((By.LINK_TEXT, "Directory"))))
+        directory_link.click()
+
+        self.driver.find_element(By.LINK_TEXT, "Directory").click()
+        assert self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text == "Teton Turf and Tree"
+        self.driver.find_element(By.ID, "directory-list").click()
+        assert self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text == "Teton Turf and Tree"
     
-    # Esperar que el mensaje de error sea visible
-    WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".errorMessage")))
-    
-    # Verificar el texto del mensaje de error
-    error_message = self.driver.find_element(By.CSS_SELECTOR, ".errorMessage").text
-    assert error_message == "Invalid username and password."
+    def test_homePage(self):
+        self.driver.get("https://ggosdinski.github.io/cse270/")
+        self.driver.set_window_size(2576, 1416)
+        elements = self.driver.find_elements(By.CSS_SELECTOR, ".header-logo img")
+        assert len(elements) > 0
+        assert self.driver.find_element(By.CSS_SELECTOR, ".header-title > h1").text == "Teton Idaho"
+        assert self.driver.find_element(By.CSS_SELECTOR, ".header-title > h2").text == "Chamber of Commerce"
+        assert self.driver.title == "Teton Idaho CoC"
+        self.driver.find_element(By.CSS_SELECTOR, "body").click()
+        elements = self.driver.find_elements(By.LINK_TEXT, "Join")
+        assert len(elements) > 0
 
+    def test_joinPage(self):
+        self.driver.get("https://ggosdinski.github.io/cse270/")
+        self.driver.set_window_size(1296, 1400)
+        self.driver.find_element(By.LINK_TEXT, "Join").click()
 
-  def test_directoryPage(self):
-    self.driver.get("https://ggosdinski.github.io/cse270/")
-    self.driver.set_window_size(2560, 1400)
-    # Agregar espera para asegurarse de que el enlace "Directory" esté presente
-    wait = WebDriverWait(self.driver, 10)  # Espera hasta 10 segundos
-    directory_link = wait.until(EC.presence_of_element_located((By.LINK_TEXT, "Directory")))
-    directory_link.click()
+        # Esperar a que el campo 'fname' sea visible antes de interactuar con él
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.NAME, "fname")))
 
+        element = self.driver.find_element(By.NAME, "fname")
+        assert element.is_enabled() is True
+        element.send_keys("Gianfranco")
+        self.driver.find_element(By.NAME, "lname").send_keys("Gosdinski")
+        self.driver.find_element(By.NAME, "bizname").send_keys("ASPERSUD")
+        self.driver.find_element(By.NAME, "biztitle").click()
+        self.driver.find_element(By.NAME, "biztitle").send_keys("sd")
+        self.driver.find_element(By.NAME, "submit").click()
 
-    self.driver.find_element(By.LINK_TEXT, "Directory").click()
-    assert self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text == "Teton Turf and Tree"
-    self.driver.find_element(By.ID, "directory-list").click()
-    assert self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text == "Teton Turf and Tree"
-  
-  def test_homePage(self):
-     self.driver.get("https://ggosdinski.github.io/cse270/")
-    self.driver.set_window_size(2576, 1416)
-    elements = self.driver.find_elements(By.CSS_SELECTOR, ".header-logo img")
-    assert len(elements) > 0
-    assert self.driver.find_element(By.CSS_SELECTOR, ".header-title > h1").text == "Teton Idaho"
-    assert self.driver.find_element(By.CSS_SELECTOR, ".header-title > h2").text == "Chamber of Commerce"
-    assert self.driver.title == "Teton Idaho CoC"
-    self.driver.find_element(By.CSS_SELECTOR, "body").click()
-    elements = self.driver.find_elements(By.LINK_TEXT, "Join")
-    assert len(elements) > 0
-  
-  def test_joinPage(self):
-     self.driver.get("https://ggosdinski.github.io/cse270/")
-    self.driver.set_window_size(1296, 1400)
-    self.driver.find_element(By.LINK_TEXT, "Join").click()
-
-    # Esperar a que el campo 'fname' sea visible antes de interactuar con él
-    WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.NAME, "fname")))
-
-    element = self.driver.find_element(By.NAME, "fname")
-    assert element.is_enabled() is True
-    element.send_keys("Gianfranco")
-    self.driver.find_element(By.NAME, "lname").send_keys("Gosdinski")
-    self.driver.find_element(By.NAME, "bizname").send_keys("ASPERSUD")
-    self.driver.find_element(By.NAME, "biztitle").click()
-    self.driver.find_element(By.NAME, "biztitle").send_keys("sd")
-    self.driver.find_element(By.NAME, "submit").click()
-
-    # Esperar a que el campo de 'email' sea visible antes de verificar
-    WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.NAME, "email")))
-    element = self.driver.find_element(By.NAME, "email")
-    assert element.is_enabled() is True
+        # Esperar a que el campo de 'email' sea visible antes de verificar
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.NAME, "email")))
+        element = self.driver.find_element(By.NAME, "email")
+        assert element.is_enabled() is True
