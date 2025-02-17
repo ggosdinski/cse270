@@ -24,7 +24,7 @@ class TestSmokeTest():
 
 
   
-  def test_adminPage(self):
+"""   def test_adminPage(self):
     self.driver.get("https://ggosdinski.github.io/cse270/index.html")
     self.driver.set_window_size(1296, 1400)
     self.driver.find_element(By.LINK_TEXT, "Admin").click()
@@ -35,8 +35,28 @@ class TestSmokeTest():
     self.driver.find_element(By.ID, "password").send_keys(Keys.ENTER)
     self.driver.find_element(By.CSS_SELECTOR, ".mysubmit:nth-child(4)").click()
     assert self.driver.find_element(By.CSS_SELECTOR, ".errorMessage").text == "Invalid username and password."
-
+ """
   
+  def test_adminPage(self):
+    self.driver.get("https://ggosdinski.github.io/cse270/index.html")
+    self.driver.set_window_size(1296, 1400)
+    
+    # Hacer clic en "Admin"
+    self.driver.find_element(By.LINK_TEXT, "Admin").click()
+
+    # Rellenar los campos y enviar
+    self.driver.find_element(By.ID, "username").send_keys("admin")
+    self.driver.find_element(By.ID, "password").send_keys("adin123213")
+    self.driver.find_element(By.ID, "password").send_keys(Keys.ENTER)
+    self.driver.find_element(By.CSS_SELECTOR, ".mysubmit:nth-child(4)").click()
+
+    # Esperar a que aparezca el mensaje de error
+    wait = WebDriverWait(self.driver, 10)
+    error_message = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".errorMessage")))
+
+    assert error_message.text == "Invalid username and password."
+
+
   def test_directoryPage(self):
     self.driver.get("https://ggosdinski.github.io/cse270/index.html")
     self.driver.set_window_size(2560, 1400)
