@@ -44,7 +44,7 @@ class TestSmokeTest():
 
 
   def test_directoryPage(self):
-     self.driver.get("https://ggosdinski.github.io/cse270/")
+    self.driver.get("https://ggosdinski.github.io/cse270/")
     self.driver.set_window_size(2560, 1400)
     # Agregar espera para asegurarse de que el enlace "Directory" esté presente
     wait = WebDriverWait(self.driver, 10)  # Espera hasta 10 segundos
