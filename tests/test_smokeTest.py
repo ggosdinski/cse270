@@ -10,6 +10,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support import expected_conditions as EC
 
 class TestSmokeTest():
   def setup_method(self, method):
@@ -34,10 +35,17 @@ class TestSmokeTest():
     self.driver.find_element(By.ID, "password").send_keys(Keys.ENTER)
     self.driver.find_element(By.CSS_SELECTOR, ".mysubmit:nth-child(4)").click()
     assert self.driver.find_element(By.CSS_SELECTOR, ".errorMessage").text == "Invalid username and password."
+
   
   def test_directoryPage(self):
     self.driver.get("https://ggosdinski.github.io/cse270/index.html")
     self.driver.set_window_size(2560, 1400)
+    # Agregar espera para asegurarse de que el enlace "Directory" esté presente
+    wait = WebDriverWait(self.driver, 10)  # Espera hasta 10 segundos
+    directory_link = wait.until(EC.presence_of_element_located((By.LINK_TEXT, "Directory")))
+    directory_link.click()
+
+
     self.driver.find_element(By.LINK_TEXT, "Directory").click()
     assert self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text == "Teton Turf and Tree"
     self.driver.find_element(By.ID, "directory-list").click()
