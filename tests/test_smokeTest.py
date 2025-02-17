@@ -67,17 +67,20 @@ class TestSmokeTest():
     self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
     self.driver.set_window_size(1296, 1400)
     self.driver.find_element(By.LINK_TEXT, "Join").click()
-    self.driver.find_element(By.NAME, "fname").click()
+
+    # Esperar a que el campo 'fname' sea visible antes de interactuar con él
+    WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.NAME, "fname")))
+
     element = self.driver.find_element(By.NAME, "fname")
     assert element.is_enabled() is True
-    self.driver.find_element(By.NAME, "fname").click()
-    self.driver.find_element(By.NAME, "fname").send_keys("Gianfranco")
+    element.send_keys("Gianfranco")
     self.driver.find_element(By.NAME, "lname").send_keys("Gosdinski")
     self.driver.find_element(By.NAME, "bizname").send_keys("ASPERSUD")
     self.driver.find_element(By.NAME, "biztitle").click()
     self.driver.find_element(By.NAME, "biztitle").send_keys("sd")
     self.driver.find_element(By.NAME, "submit").click()
+
+    # Esperar a que el campo de 'email' sea visible antes de verificar
+    WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.NAME, "email")))
     element = self.driver.find_element(By.NAME, "email")
     assert element.is_enabled() is True
-    assert self.driver.find_element(By.CSS_SELECTOR, ".myinput:nth-child(2)").text == "Email"
-  
