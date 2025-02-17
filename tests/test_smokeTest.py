@@ -25,7 +25,7 @@ class TestSmokeTest():
 
   
   def test_adminPage(self):
-    self.driver.get("https://ggosdinski.github.io/cse270/index.html")
+    self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
     self.driver.set_window_size(1296, 1400)
     self.driver.find_element(By.LINK_TEXT, "Admin").click()
     element = self.driver.find_element(By.ID, "username")
@@ -38,7 +38,7 @@ class TestSmokeTest():
  
 
   def test_directoryPage(self):
-    self.driver.get("https://ggosdinski.github.io/cse270/index.html")
+    self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
     self.driver.set_window_size(2560, 1400)
     # Agregar espera para asegurarse de que el enlace "Directory" esté presente
     wait = WebDriverWait(self.driver, 10)  # Espera hasta 10 segundos
@@ -52,7 +52,7 @@ class TestSmokeTest():
     assert self.driver.find_element(By.CSS_SELECTOR, ".gold-member:nth-child(9) > p:nth-child(2)").text == "Teton Turf and Tree"
   
   def test_homePage(self):
-    self.driver.get("https://ggosdinski.github.io/cse270/index.html")
+    self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
     self.driver.set_window_size(2576, 1416)
     elements = self.driver.find_elements(By.CSS_SELECTOR, ".header-logo img")
     assert len(elements) > 0
@@ -64,7 +64,7 @@ class TestSmokeTest():
     assert len(elements) > 0
   
   def test_joinPage(self):
-    self.driver.get("https://ggosdinski.github.io/cse270/index.html")
+    self.driver.get("http://127.0.0.1:5500/teton/1.6/index.html")
     self.driver.set_window_size(1296, 1400)
     self.driver.find_element(By.LINK_TEXT, "Join").click()
     self.driver.find_element(By.NAME, "fname").click()
