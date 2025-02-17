@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL = "http://127.0.0.1:8000/users/"
+BASE_URL = "http://127.0.0.1:5500/users/"
 
 def test_valid_user():
     """Test 1: Verifies that a valid user receives a 200 status code"""
