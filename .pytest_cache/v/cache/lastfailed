@@ -1,0 +1,12 @@
+{
+  "tests/test_list_manager.py::test_get_list": true,
+  "tests/test_list_manager.py::test_initialize_list": true,
+  "tests/test_list_manager.py::test_add_to_list": true,
+  "tests/test_list_manager.py::test_remove_from_list": true,
+  "tests/test_list_manager.py::test_remove_from_list_missing_value": true,
+  "tests/test_list_manager.py::test_replace_item": true,
+  "tests/test_list_manager.py::test_replace_item_missing_value": true,
+  "tests/test_list_manager.py::test_get_item_at_position": true,
+  "tests/test_list_manager.py::test_get_item_at_position_5": true,
+  "tests/test_list_manager.py::test_get_item_at_bad_position": true
+}
